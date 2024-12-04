@@ -98,7 +98,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Route 3 : Get user Using : POST http://localhost:8080/api/auth/login
+// Route 3 : Get user details Using : POST http://localhost:8080/api/auth/login
 
 router.post('/getuser',fetchuser, async (req, res) => {
 try {
