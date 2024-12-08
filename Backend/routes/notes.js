@@ -25,14 +25,20 @@ router.post("/addnote", noteValidationRules(), fetchuser, async (req, res) => {
       return res.status(400).json({ success: false, errors: errors.array() });
     }
     // Destructure fields from the request body
-    const { title, description, tag } = req.body;
+    const { title, description, tag, category } = req.body;
+
+      // Validate input
+      if (!category) {
+        return res.status(400).json({ success: false, error: "Category is required" });
+    }
 
     // Create and save a new note
     const note = new Notes({
         user: req.user.id,
         title,
         description,
-        tag
+        tag,
+        category
     });
     const savedNote = await note.save();
     res.json({ success: true, note: savedNote });
@@ -45,7 +51,7 @@ router.post("/addnote", noteValidationRules(), fetchuser, async (req, res) => {
 // Route 3: Update Note using: Post "/api/notes/updatenote". Login Required
 router.put('/updatenote/:id', noteValidationRules(), fetchuser, async (req, res) => {
     try {
-        const { title, description, tag } = req.body;
+        const { title, description, tag, category } = req.body;
 
         // Validate request body
         const errors = validationResult(req);
@@ -58,6 +64,7 @@ router.put('/updatenote/:id', noteValidationRules(), fetchuser, async (req, res)
         if (title) newNote.title = title;
         if (description) newNote.description = description;
         if (tag) newNote.tag = tag;
+        if (category) newNote.category = category;
 
         // Find the note to update
         const noteId = req.params.id;
@@ -111,7 +118,30 @@ res.json({ success: true, Status:"Note has been Deleted Succesfully"  });
         console.error(error.message);
         res.status(500).json({ success: false, error: "Internal Server Error" });
     }
-})
+});
+
+//Route 5 : 
+router.get('/fetchbycategory/:category', fetchuser, async (req, res) => {
+  try {
+      const category = req.params.category;
+
+      // Fetch notes by category and user
+      const notes = await Notes.find({
+          user: req.user.id,
+          category: category
+      });
+
+      if (!notes || notes.length === 0) {
+          return res.status(404).json({ success: false, error: "No notes found for this category" });
+      }
+
+      res.json({ success: true, notes });
+  } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ success: false, error: "Internal Server Error" });
+  }
+});
+
 
 
 module.exports = router;
