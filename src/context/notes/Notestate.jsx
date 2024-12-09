@@ -10,63 +10,65 @@ const NoteState = (props) => {
 
 // GEt all Notes
 const getNotes = async () => {
-    try {
-      // API call to fetch notes
-      const response = await axios.get(`${URI}/fetchallnotes`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk"
-        },
-      });
+
+    const response = await fetch (`${URI}/fetchallnotes`,{
+        method: "GET",
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
+        }
+    });
+    
+    const data = await response.json();
+    setNotes(data.notes)
+   
+
   
-      // Handle the response
-      console.log("Notes fetched successfully:", response.data);
-  
-      if (Array.isArray(response.data.notes)) {
-        setNotes(response.data.notes);
-      } 
-  
-    } catch (error) {
-      console.error("Error fetching notes:", error.message);
-    }
   };
   
 
   // Add a note
 
 const addNote = async (title, description, tag, category) => {
-  try {
-    // Prepare the data to be sent in the request
-    const data = { title, tag , category ,description};
-    console.log('Data being sent to the server:', data);
-
-    // API Call using Axios
-    const response = await axios.post(
-      `${URI}/addnote`, // Replace `URI` with your base API URL
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk", // Replace with your actual JWT token
+   
+    const response = await fetch (`${URI}/addnote`,{
+        method: "POST",
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
         },
-      }
-    );
+        body: JSON.stringify({title,description,category,tag})
+    });
+    
 
-    // Extract the newly added note from the API response
-    const newNote = response.data.note;
 
-    // Update the local notes array
-    setNotes(notes.concat(newNote)); // Add the new note to the existing state
 
-    console.log("Note added successfully", newNote);
-  } catch (error) {
-    console.error("Error adding note:", error.message);
-  }
+    const note =  {
+        "user": "674376037576bcdd51eb696c",
+        "title": title,
+        "description": description,
+        "tag": tag,
+        "category": category,
+        "_id": "675603ba234848cf49958dd2 [Added]",
+        "date": "2024-12-08T20:38:18.804Z",
+        "__v": 0
+    }
+   setNotes(notes.concat(note))
 };
 
   // Delete a note
-  const deleteNote = (id) => {
-    console.log("deleteNote " + id);
+  const deleteNote = async(id) => {
+
+    const response = await fetch (`${URI}/deletenote/${id}`,{
+        method: "DELETE",
+        headers:{
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
+        },
+       
+    });
+    const json = response.json();
+    console.log(json);
     const newNotes = notes.filter((note) => {
       return note._id !== id;
     });
@@ -77,35 +79,31 @@ const addNote = async (title, description, tag, category) => {
 // Edit a note
 
 const editNote = async (id, title, description, tag, category) => {
-  try {
-    // Prepare the data to be sent in the request
-    const data = { title, description, tag, category };
 
-    // API Call using Axios
-    const response = await axios.put(
-      `${URI}/updatenote/${id}`, // Replace `URI` with your base API URL
-      data,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer YOUR_JWT_TOKEN", // Replace with your actual JWT token
-        },
-      }
-    );
+    try{
 
-    // Extract updated note from response
-    const updatedNote = response.data;
+        const response = await fetch (`${URI}/updatenote/${id}`,{
+            method: "PUT",
+            headers:{
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
+            },
+            body: JSON.stringify({title, description, tag, category})
+        });
+        const json = response.json();
+    
+ for (let index = 0; index < notes.length; index++) {
+    const element = notes[index];
+    if(element._id===id){
+        element.title = title;
+        element.description = description;
+        element.tag = tag;
+        element.category = category;
+    }
+ }
+} catch(error){
 
-    // Update the local notes array
-    const updatedNotes = notes.map((note) =>
-      note._id === id ? { ...note, ...updatedNote } : note
-    );
-
-    setNotes(updatedNotes); // Update state with new notes
-    console.log("Note updated successfully", updatedNote);
-  } catch (error) {
-    console.error("Error updating note:", error.message);
-  }
+}
 };
 
 

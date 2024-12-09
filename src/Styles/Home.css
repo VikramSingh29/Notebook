@@ -1,0 +1,32 @@
+.home-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+  }
+  
+  .jumbotron {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+  }
+  
+  .jumbotron h1 {
+    font-size: 3rem;
+  }
+  
+  .jumbotron .lead {
+    font-size: 1.25rem;
+  }
+  
+  .container {
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  
+  .card {
+    margin: 10px;
+  }
+  
