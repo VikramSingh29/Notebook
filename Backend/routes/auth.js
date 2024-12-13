@@ -7,35 +7,42 @@ const router = express.Router(); // Router-level middleware
 const { generateToken } = require('../utils/token'); // Ensure proper import
 const fetchuser = require('../middlewares/fetchuser');
 
+// Helper function to handle errors
+const handleError = (res, status, message, error = null) => {
+  if (error) console.error('Error:', error);
+  res.status(status).json({ error: message });
+};
+
 // Route to create a new user
 router.post('/createuser', userValidationRules(), async (req, res) => {
-  // Validate the request
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
 
   try {
+    const { name, email, password } = req.body;
+
+    // Check if the email already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already exists' });
+    }
+
     // Hash the password
-    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new user instance with hashed password
-    const user = new User({
-      name: req.body.name,
-      email: req.body.email,
-      password: hashedPassword, // Save the hashed password
-    });
-
-    // Save the user to the database
+    // Create and save the new user
+    const user = new User({ name, email, password: hashedPassword });
     await user.save();
 
-    // Generate a JWT token for the user
+    // Generate a JWT token
     const token = generateToken(user);
 
-    // Respond with success (exclude sensitive fields like the password)
+    // Respond with success (exclude password)
     res.status(201).json({
       message: 'User created successfully',
-      token, // Include the JWT token in the response
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -43,22 +50,13 @@ router.post('/createuser', userValidationRules(), async (req, res) => {
       },
     });
   } catch (error) {
-    // Check for duplicate email error
-    if (error.code === 11000 && error.keyPattern.email) {
-      return res.status(400).json({
-        error: 'Email already exists',
-      });
-    }
-
-    // Handle other errors during database operations
-    console.log('Error', error);
-    res.status(500).json({ error: 'Server error. Could not create user.' });
+    handleError(res, 500, 'Server error. Could not create user.', error);
   }
 });
 
-// Authenticate a User using: POST http://localhost:8080/api/auth/login
+// Authenticate a user
 router.post('/login', async (req, res) => {
-  // Validate the request
+  let success = false;
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
@@ -67,25 +65,23 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // Find user by email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ success, error: 'Invalid credentials' });
     }
 
-    // Compare provided password with the hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(400).json({ error: 'Invalid credentials' });
+      return res.status(400).json({ success, error: 'Invalid credentials' });
     }
 
-    // Generate a JWT token for the authenticated user
     const token = generateToken(user);
+    success = true;
 
-    // Respond with success
     res.status(200).json({
+      success,
       message: 'Login successful',
-      token, // Include the JWT token in the response
+      token,
       user: {
         id: user._id,
         name: user.name,
@@ -93,25 +89,21 @@ router.post('/login', async (req, res) => {
       },
     });
   } catch (error) {
-    console.log('Error', error);
-    res.status(500).json({ error: 'Server error. Could not log in.' });
+    handleError(res, 500, 'Server error. Could not log in.', error);
   }
 });
 
-// Route 3 : Get user details Using : POST http://localhost:8080/api/auth/login
-
-router.post('/getuser',fetchuser, async (req, res) => {
-try {
-  const id = req.user.id;
-  const user = await User.findById(id).select("-password")
-  res.send(user)
-} catch (error) {
-  console.log(error.message);
-  res.status(500).send("Internal server Error")
-}
-
+// Route to get user details
+router.post('/getuser', fetchuser, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    handleError(res, 500, 'Internal server error', error);
+  }
 });
-
-
 
 module.exports = router;

@@ -9,10 +9,16 @@
     color: #fff;
     border-radius: 10px;
     padding: 30px;
+    height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
   
   .jumbotron h1 {
     font-size: 3rem;
+    
   }
   
   .jumbotron .lead {

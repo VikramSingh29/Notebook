@@ -8,7 +8,9 @@ const router = express.Router(); // Router-level middleware
 // Route1: Getting all notes
 router.get("/fetchallnotes", fetchuser, async (req, res) => {
   try {
+    console.log('Authenticated User ID:', req.user.id); 
     const notes = await Notes.find({ user: req.user.id });
+
     res.json({ success: true, notes });
   } catch (error) {
     console.error(error.message);

@@ -5,6 +5,7 @@ const SECRET_KEY = "thisisaSecret";
 const fetchuser = (req, res, next) => {
   try {
     const authHeader = req.header("Authorization");
+    console.log("Authorization Header:", authHeader);
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
       return res
         .status(401)
@@ -13,6 +14,7 @@ const fetchuser = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
     const data = jwt.verify(token, SECRET_KEY);
+    console.log('Decoded Token:', data); 
     req.user = data;
     next();
   } catch (error) {

@@ -1,116 +1,97 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import NoteContext from "./notContext";
-import axios from "axios";
 
 const NoteState = (props) => {
   const URI = "http://localhost:8080/api/notes";
-  
-
   const [notes, setNotes] = useState([]);
+  const token = localStorage.getItem("authToken");
 
-// GEt all Notes
-const getNotes = async () => {
+  const apiHeaders = useMemo(() => ({
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${token}`,
+  }), [token]);
 
-    const response = await fetch (`${URI}/fetchallnotes`,{
+  const getNotes = useCallback(async () => {
+    try {
+      const response = await fetch(`${URI}/fetchallnotes`, {
         method: "GET",
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
-        }
-    });
-    
-    const data = await response.json();
-    setNotes(data.notes)
-   
+        headers: apiHeaders,
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setNotes(data.notes || []);
+      } else {
+        throw new Error(data.message || "Failed to fetch notes");
+      }
+    } catch (error) {
+      console.error("Error fetching notes:", error);
+    }
+  }, [apiHeaders]);
 
-  
-  };
-  
-
-  // Add a note
-
-const addNote = async (title, description, tag, category) => {
-   
-    const response = await fetch (`${URI}/addnote`,{
+  const addNote = useCallback(async (title, description, tag, category) => {
+    try {
+      const response = await fetch(`${URI}/addnote`, {
         method: "POST",
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
-        },
-        body: JSON.stringify({title,description,category,tag})
-    });
-    
-
-
-
-    const note =  {
-        "user": "674376037576bcdd51eb696c",
-        "title": title,
-        "description": description,
-        "tag": tag,
-        "category": category,
-        "_id": "675603ba234848cf49958dd2 [Added]",
-        "date": "2024-12-08T20:38:18.804Z",
-        "__v": 0
+        headers: apiHeaders,
+        body: JSON.stringify({ title, description, tag, category }),
+      });
+      const newNote = await response.json();
+      if (response.ok) {
+        setNotes((prevNotes) => [...prevNotes, newNote]);
+      } else {
+        throw new Error(newNote.message || "Failed to add note");
+      }
+    } catch (error) {
+      console.error("Error adding note:", error);
     }
-   setNotes(notes.concat(note))
-};
+  }, [apiHeaders]);
 
-  // Delete a note
-  const deleteNote = async(id) => {
-
-    const response = await fetch (`${URI}/deletenote/${id}`,{
+  const deleteNote = useCallback(async (id) => {
+    try {
+      const response = await fetch(`${URI}/deletenote/${id}`, {
         method: "DELETE",
-        headers:{
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
-        },
-       
-    });
-    const json = response.json();
-    console.log(json);
-    const newNotes = notes.filter((note) => {
-      return note._id !== id;
-    });
-    setNotes(newNotes);
-  };
-
-
-// Edit a note
-
-const editNote = async (id, title, description, tag, category) => {
-
-    try{
-
-        const response = await fetch (`${URI}/updatenote/${id}`,{
-            method: "PUT",
-            headers:{
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3NDM3NjAzNzU3NmJjZGQ1MWViNjk2YyIsIm5hbWUiOiJUaG9zZHNyMXciLCJlbWFpbCI6InRoc29zZHIxZHdAZ21haWwuY29tIiwiaWF0IjoxNzMyNTEzMjA0fQ.cwbQN_1I_glKla_R2aJdR3K6NWyZYZgU8bRVeAMDuuk`
-            },
-            body: JSON.stringify({title, description, tag, category})
-        });
-        const json = response.json();
-    
- for (let index = 0; index < notes.length; index++) {
-    const element = notes[index];
-    if(element._id===id){
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
-        element.category = category;
+        headers: apiHeaders,
+      });
+      if (response.ok) {
+        setNotes((prevNotes) => prevNotes.filter((note) => note._id !== id));
+      } else {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to delete note");
+      }
+    } catch (error) {
+      console.error("Error deleting note:", error);
     }
- }
-} catch(error){
+  }, [apiHeaders]);
 
-}
-};
-
+  const editNote = useCallback(async (id, title, description, tag, category) => {
+    try {
+      const response = await fetch(`${URI}/updatenote/${id}`, {
+        method: "PUT",
+        headers: apiHeaders,
+        body: JSON.stringify({ title, description, tag, category }),
+      });
+      if (response.ok) {
+        setNotes((prevNotes) =>
+          prevNotes.map((note) =>
+            note._id === id
+              ? { ...note, title, description, tag, category }
+              : note
+          )
+        );
+      } else {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to update note");
+      }
+    } catch (error) {
+      console.error("Error editing note:", error);
+    }
+  }, [apiHeaders]);
 
   return (
-    <NoteContext.Provider value={{ notes, addNote, deleteNote, editNote,getNotes }}>
+    <NoteContext.Provider value={{ notes, getNotes, addNote, deleteNote, editNote, setNotes }}>
       {props.children}
     </NoteContext.Provider>
   );
 };
+
 export default NoteState;

@@ -1,35 +1,44 @@
 .note-card {
   border-radius: 10px;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: rgb(239, 238, 238);
+  background-color: #ebe7e7; /* Keep a clean background */
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1), 0 3px 6px rgba(0, 0, 0, 0.06);
 }
-.list-group-item{
-  background-color: rgb(239, 238, 238);
-}
+
 .note-card:hover {
   transform: translateY(-5px) scale(1.02);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15), 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
   font-size: 1.25rem;
   font-weight: bold;
   color: #333;
-  background-color: rgb(239, 238, 238);
+  background-color: #ebe7e7; /* Light grey background for title */
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }
 
 .card-text {
   font-size: 1rem;
   line-height: 1.5;
   color: #555;
+  padding: 0 10px; /* Add padding for better text alignment */
 }
 
 .card-footer {
-  border-top: 1px solid #e0e0e0;
-  background-color: #f8f9fa;
+  border-top: 1px solid #ddd;
+  background-color: #f8f9fa; /* Match the title background */
   padding: 10px;
-  background-color: rgb(239, 238, 238);
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgb(217, 217, 217);
+  border-right:1px solid rgb(217, 217, 217) ;
+  border-left:1px solid rgb(217, 217, 217) ;
 }
 
 .btn {
