@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import noteContext from "../context/notes/notContext";
 import { Alert } from "react-bootstrap";
 import useAlert from "../services/useAlert";
+import  "../Styles/utils.css"
 
 function UpdateNote() {
   const location = useLocation();
@@ -52,8 +53,8 @@ function UpdateNote() {
   };
 
   return (
-    <div className="container my-5" style={{ maxWidth: "600px" }}>
-      <h2 className="text-center text-success mb-4">Update Your Note</h2>
+    <div className="container my-5 " style={{ maxWidth: "600px" }}>
+      <h2 className="text-center text-success card-margin mb-4">Update Your Note</h2>
       {alert.show && (
           <Alert
             variant={alert.type}
@@ -125,9 +126,11 @@ function UpdateNote() {
             required
           ></textarea>
         </div>
-        <button type="submit" className="btn btn-success w-100">
+        <div className="d-flex justify-content-center align-items-center">
+        <button type="submit" className="btn btn-success w-50">
           Update Note
         </button>
+        </div>
       </form>
     </div>
   );

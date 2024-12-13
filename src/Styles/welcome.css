@@ -1,92 +1,92 @@
 /* Welcome Component Styles */
 
 .welcome-container {
-    background: url('https://plus.unsplash.com/premium_photo-1685134731588-783ca7471b65?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Tm90ZWJvb2t8ZW58MHx8MHx8fDA%3D') no-repeat center center/cover;
-    color: #fff;
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 20px;
+  background: url("https://plus.unsplash.com/premium_photo-1685134731588-783ca7471b65?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8Tm90ZWJvb2t8ZW58MHx8MHx8fDA%3D")
+    no-repeat center center/cover;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.welcome-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  animation: fadeInDown 1.2s ease-in-out;
+}
+
+.welcome-title .text-primary {
+  color: #ffc107; /* Highlighted color for Notes App */
+}
+
+.welcome-subtitle {
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #f8f9fa;
+  animation: fadeInUp 1.5s ease-in-out;
+}
+
+.welcome-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+/* 
+.btn {
+  font-size: 1rem;
+  padding: 6px 15px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+} */
+
+/* .btn-primary {
+  background-color: #007bff;
+  border: none;
+} */
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.5);
+  transition: transform 0.3s ease, background-color 0.2s ease;
+}
+.btn-danger:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease, background-color 0.2s ease;
+}
+
+
+.btn-success:hover {
+  background-color: #1c7430;
+  transform: scale(1.1);
+  box-shadow: 0px 4px 10px rgba(40, 167, 69, 0.5);
+  transition: transform 0.3s ease, background-color 0.2s ease;
+}
+
+/* Animations */
+@keyframes fadeInDown {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px);
   }
-  
-  .welcome-title {
-    font-size: 3rem;
-    font-weight: bold;
-    margin-bottom: 1rem;
-    animation: fadeInDown 1.2s ease-in-out;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .welcome-title .text-primary {
-    color: #ffc107; /* Highlighted color for Notes App */
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(50px);
   }
-  
-  .welcome-subtitle {
-    font-size: 1.5rem;
-    margin-bottom: 2rem;
-    color: #f8f9fa;
-    animation: fadeInUp 1.5s ease-in-out;
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
-  
-  .welcome-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-  }
-  
-  .btn {
-    font-size: 1rem;
-    padding: 6px 15px;
-    border-radius: 20px;
-    text-transform: uppercase;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-  
-  .btn-primary {
-    background-color: #007bff;
-    border: none;
-  }
-  
-  .btn-primary:hover {
-    background-color: #0056b3;
-    transform: scale(1.1);
-    box-shadow: 0px 4px 10px rgba(0, 123, 255, 0.5);
-  }
-  .btn-danger:hover{
-    transform: scale(1.1);
-  }
-  .btn-success {
-    background-color: #28a745;
-    border: none;
-  }
-  
-  .btn-success:hover {
-    background-color: #1c7430;
-    transform: scale(1.1);
-    box-shadow: 0px 4px 10px rgba(40, 167, 69, 0.5);
-  }
-  
-  /* Animations */
-  @keyframes fadeInDown {
-    0% {
-      opacity: 0;
-      transform: translateY(-50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes fadeInUp {
-    0% {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
+}

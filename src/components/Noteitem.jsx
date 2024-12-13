@@ -11,14 +11,20 @@ function Noteitem({ note, updateNote }) {
 
   const description = note.description || ""; // Default to an empty string if undefined
 
+  // Count words in the description
+  const wordCount = description.split(/\s+/).filter(word => word).length;
+
   return (
-    <div className="col-md-4 mb-4">
-      <div className="card shadow-sm border-light">
+    <div className="col-md-3 mb-4">
+      <div className="card shadow-sm " style={{width:'18rem', border:'1px solid #D3D3D3'}}>
         <div className="card-body">
           <h5 className="card-title text-success">{note.title || "Untitled"}</h5>
           <p className="card-text text-muted">
-            {description.length > 100 ? `${description.slice(0, 100)}...` : description}
+            {description.split(/\s+/).length > 10
+              ? `${description.split(/\s+/).slice(0, 10).join(" ")}...`
+              : description}
           </p>
+         
         </div>
         <ul className="list-group list-group-flush">
           <li className="list-group-item">
@@ -29,7 +35,8 @@ function Noteitem({ note, updateNote }) {
           </li>
         </ul>
         <div className="card-footer d-flex justify-content-between align-items-center">
-          <div>
+          <div className="d-flex justify-content-between align-items-center" >
+           
             <button
               className="btn btn-sm btn-success mx-1"
               onClick={() => updateNote(note)}
@@ -42,6 +49,17 @@ function Noteitem({ note, updateNote }) {
             >
               Delete
             </button>
+            </div>
+            <div className="">
+            {wordCount > 30 && (
+            <button
+              className="btn btn-sm btn-primary "
+              onClick={handleShow}
+            >
+              View
+            </button>
+          )}
+          
           </div>
         </div>
       </div>

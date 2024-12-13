@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { login } from "../services/apiService";
 import { Alert } from "react-bootstrap";
+import  "../Styles/utils.css"
 import useAlert from "../services/useAlert";
 
 function Login() {
@@ -27,8 +28,8 @@ function Login() {
   };
 
   return (
-    <div className="d-flex justify-content-center my-5 align-items-center min-vh-90">
-      <div className="card shadow-lg p-4" style={{ width: "24rem", borderRadius: "1rem" }}>
+    <div className="d-flex justify-content-center my-5 align-items-center min-vh-90 ">
+      <div className="card shadow-lg p-4 card-margin" style={{ width: "24rem", borderRadius: "1rem" }}>
         <h2 className="text-center text-success mb-4">Login</h2>
         {alert.show && (
           <Alert

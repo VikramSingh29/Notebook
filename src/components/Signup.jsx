@@ -34,7 +34,7 @@ function SignupForm() {
 
   return (
     <div className=" d-flex justify-content-center my-5 align-items-center min-vh-90">
-      <div className="card shadow-lg p-4" style={{ width: "24rem", borderRadius: "1rem" }}>
+      <div className="card shadow-lg p-4 card-margin" style={{ width: "24rem", borderRadius: "1rem" }}>
         <h2 className="text-center text-success mb-4">Sign Up</h2>
         {alert.show && (
           <Alert

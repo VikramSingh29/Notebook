@@ -132,7 +132,6 @@ function AddNote() {
         </form>
       </div>
       <div className="container">
-        <h3>Your Notes</h3>
         <Notes />
       </div>
     </>

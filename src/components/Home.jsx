@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import CategoryNotes from "./CategoryNotes";
 import Noteitem from "./Noteitem";
 import noteContext from "../context/notes/notContext";
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
+import  "../Styles/utils.css"
 
 function Home() {
   const { notes, getNotes } = useContext(noteContext);
@@ -38,8 +39,8 @@ function Home() {
   const recentNotes = Array.isArray(notes) ? notes.slice(-3) : [];
 
   return (
-    <div className="home-container my-3">
-      <div className="jumbotron text-center">
+    <div className="home-container my-3 ">
+      <div className="jumbotron container margin bg-success d-flex  flex-column justify-content-center align-items-center " style={{height:'250px',borderRadius:'15px', color:'white'}}>
         <h1>Welcome to Your Notes App</h1>
         <p>Organize your thoughts and stay productive!</p>
       </div>
